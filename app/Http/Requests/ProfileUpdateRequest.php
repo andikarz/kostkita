@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Models\User;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class ProfileUpdateRequest extends FormRequest
+{
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'gender' => ['nullable', 'in:Laki-laki,Perempuan'],
+            'nik' => ['nullable', 'string', 'max:20'],
+            'image' => ['nullable', 'image', 'max:3072'],
+            'image_id' => ['nullable', 'image', 'max:3072'],
+        ];
+    }
+
+}

@@ -1,0 +1,263 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f4f6f8;
+}
+
+.container-login {
+    display: flex;
+    width: 900px;
+    height: 520px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.container-register {
+    display: flex;
+    width: 900px;
+    height: 550px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.left-panel {
+    flex: 1;
+    background: #145391;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.left-panel h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.left-panel p {
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+.btn-help {
+    display: inline-block;
+    padding: 10px 25px;
+    border: 2px solid white;
+    border-radius: 20px;
+    background: transparent;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-help:hover {
+    background: white;
+    color: #145391;
+}
+
+/* Panel kanan */
+.right-panel {
+    flex: 1;
+    padding: 50px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.right-panel h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #145391;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin: 8px 0 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+input {
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+input:focus {
+    border-color: #145391;
+}
+
+select {
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    outline: none;
+    font-size: 14px;
+    background: #fff;
+}
+
+select:focus {
+    border-color: #145391;
+}
+
+select#role {
+    appearance: none;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.options a {
+    color: #145391;
+    text-decoration: none;
+}
+
+.options a:hover {
+    text-decoration: underline;
+}
+
+.btn-masuk {
+    background: #145391;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.signup {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.signup a {
+    color: #145391;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup a:hover {
+    text-decoration: underline;
+}
+
+.btn-daftar {
+    background: #145391;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 12px;
+}
+
+.login {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.login a {
+    color: #145391;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login a:hover {
+    text-decoration: underline;
+}
+
+#errorMsg {
+    color: #ff4d4f;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+    display: none;
+}
+
+/* Forgot Password */
+.container-forgot {
+    display: grid;
+    width: 500px;
+    min-height: 200px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
+    overflow: hidden;
+}
+
+.left-form {
+    padding: 44px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title-forgot {
+    color: #145391;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.help-text {
+    font-size: 14px;
+    color: #555;
+    margin: 6px 0 10px;
+}
+
+.btn-reset {
+    margin-top: 12px;
+}
+
+.field-error {
+    color: #ff4d4f;
+    font-size: 14px;
+    margin: 6px 0 8px;
+}
+
+.notif-success {
+    color: #16a34a;
+    font-size: 14px;
+}
+
+.kost-area-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 20px 20px 18px rgba(0, 0, 0, .15);
+}

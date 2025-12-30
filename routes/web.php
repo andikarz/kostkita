@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KostController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\UnifiedLoginController;
 use App\Http\Controllers\RatingController;
@@ -20,7 +21,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index']);
 
 // Pencarian & detail kost (publik)
-Route::get('/cari', [KostController::class, 'search'])->name('kost.search');
+Route::get('/cari', [SearchController::class, 'index'])->name('kost.search');
 Route::get('/kost/{kost}', [KostController::class, 'show'])->name('kost.show.id');
 
 // Route auth bawaan Laravel (register, password reset, dll)

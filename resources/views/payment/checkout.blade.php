@@ -37,16 +37,27 @@
                                     <tr>
                                         <td>Harga Sewa per Bulan</td>
                                         <td class="text-end">Rp
-                                            {{ number_format($booking->harga_per_bulan ?? 0, 0, ',', '.') }}</td>
+                                            {{ number_format($booking->harga_per_bulan ?? 0, 0, ',', '.') }}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Lama Sewa</td>
                                         <td class="text-end">{{ $booking->lama_sewa }} Bulan</td>
                                     </tr>
+                                    <tr>
+                                        <td>Biaya Admin</td>
+                                        <td class="text-end">Rp {{ number_format($booking->pajak ?? 0, 0, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Biaya Layanan</td>
+                                        <td class="text-end">Rp
+                                            {{ number_format($booking->biaya_layanan ?? 0, 0, ',', '.') }}</td>
+                                    </tr>
                                     <tr class="fw-bold table-light">
                                         <td>Total Pembayaran</td>
                                         <td class="text-end text-success">Rp
-                                            {{ number_format($payment->jumlah, 0, ',', '.') }}</td>
+                                            {{ number_format($payment->jumlah, 0, ',', '.') }}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

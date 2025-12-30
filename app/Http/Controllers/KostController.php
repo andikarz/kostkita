@@ -22,44 +22,7 @@ class KostController extends Controller
         return view('kost.show', compact('kost', 'related'));
     }
 
-    /** Pencarian & listing publik */
-    public function search(Request $request)
-    {
-        $q = Kost::query();
 
-        // keyword: nama / kecamatan / kota
-        if ($request->filled('q')) {
-            $keyword = trim($request->q);
-            $q->where(function ($w) use ($keyword) {
-                $w->where('nama', 'like', "%{$keyword}%")
-                    ->orWhere('kecamatan', 'like', "%{$keyword}%")
-                    ->orWhere('kota', 'like', "%{$keyword}%");
-            });
-        }
-
-        // filter area & harga
-        if ($request->filled('area')) {
-            $q->where('kecamatan', $request->area);
-        }
-        if ($request->filled('harga_min')) {
-            $q->where('harga_bulanan', '>=', (int) $request->harga_min);
-        }
-        if ($request->filled('harga_max')) {
-            $q->where('harga_bulanan', '<=', (int) $request->harga_max);
-        }
-
-        // sorting: harga_asc|harga_desc|terbaru (default)
-        $sort = $request->get('sort', 'terbaru');
-        match ($sort) {
-            'harga_asc' => $q->orderBy('harga_bulanan', 'asc'),
-            'harga_desc' => $q->orderBy('harga_bulanan', 'desc'),
-            default => $q->latest(),
-        };
-
-        $result = $q->paginate(12)->appends($request->query());
-
-        return view('kost.search', ['kosts' => $result]);
-    }
 
     /** LIST admin */
     public function index(Request $request)

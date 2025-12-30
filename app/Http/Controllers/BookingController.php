@@ -23,7 +23,8 @@ class BookingController extends Controller
         ]);
 
         $pajak = 20000;
-        $total = ($kost->harga_bulanan * $request->lama_sewa) + $pajak;
+        $biaya_layanan = 25000;
+        $total = ($kost->harga_bulanan * $request->lama_sewa) + $pajak + $biaya_layanan;
 
         $booking = Booking::create([
             'user_id' => Auth::id(),
@@ -32,6 +33,7 @@ class BookingController extends Controller
             'lama_sewa' => $request->lama_sewa,
             'harga_per_bulan' => $kost->harga_bulanan,
             'pajak' => $pajak,
+            'biaya_layanan' => $biaya_layanan,
             'total' => $total,
             'status' => 'menunggu_pembayaran',
         ]);

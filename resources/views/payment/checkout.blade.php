@@ -44,14 +44,12 @@
                                         <td>Lama Sewa</td>
                                         <td class="text-end">{{ $booking->lama_sewa }} Bulan</td>
                                     </tr>
-                                    <tr>
-                                        <td>Biaya Admin</td>
-                                        <td class="text-end">Rp {{ number_format($booking->pajak ?? 0, 0, ',', '.') }}</td>
-                                    </tr>
+
                                     <tr>
                                         <td>Biaya Layanan</td>
                                         <td class="text-end">Rp
-                                            {{ number_format($booking->biaya_layanan ?? 0, 0, ',', '.') }}</td>
+                                            {{ number_format($booking->biaya_layanan ?? 0, 0, ',', '.') }}
+                                        </td>
                                     </tr>
                                     <tr class="fw-bold table-light">
                                         <td>Total Pembayaran</td>
@@ -87,7 +85,7 @@
                     onSuccess: function (result) {
                         /* You may add your own implementation here */
                         // alert("payment success!"); 
-                        window.location.href = "{{ route('payment.finish') }}";
+                        window.location.href = "{{ route('payment.finish') }}?order_id=" + result.order_id;
                     },
                     onPending: function (result) {
                         /* You may add your own implementation here */

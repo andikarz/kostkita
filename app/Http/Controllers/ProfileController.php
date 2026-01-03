@@ -129,12 +129,18 @@ class ProfileController extends Controller
         $this->authorizeOwner();
         $user = Auth::user();
 
-        // Kalau mau ambil data tertentu, contoh:
-        // $kosts = Kost::where('user_id', $user->id)->get();
+        // Ambil booking untuk kost yang dimiliki user ini
+        $ownerBookings = \App\Models\Booking::whereHas('kost', function ($query) use ($user) {
+            $query->where('owner_id', $user->id);
+        })->with(['user', 'kost', 'payment'])->latest()->get();
+
+        // Ambil data kost milik owner
+        $kosts = \App\Models\Kost::where('owner_id', $user->id)->get();
 
         return view('profile.user.dashboard', [
             'user' => $user,
-            // 'kosts' => $kosts,
+            'ownerBookings' => $ownerBookings,
+            'kosts' => $kosts,
         ]);
     }
 

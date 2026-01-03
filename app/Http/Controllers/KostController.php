@@ -13,6 +13,9 @@ class KostController extends Controller
     /** Detail kost + rekomendasi di kecamatan yang sama */
     public function show(Kost $kost)
     {
+        // Eager load rating & user
+        $kost->load(['ratings.user']);
+
         $related = Kost::where('kecamatan', $kost->kecamatan)
             ->whereKeyNot($kost->getKey())
             ->latest()
@@ -215,7 +218,17 @@ class KostController extends Controller
 
     public function edit(Kost $kost)
     {
-        return view('admin.kost.edit', compact('kost'));
+        // Jika admin, kembalikan view admin
+        if (Auth::guard('admin')->check()) {
+            return view('admin.kost.edit', compact('kost'));
+        }
+
+        // Jika user biasa (owner), pastikan dia pemiliknya
+        if ($kost->owner_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('profile.user.edit', compact('kost'));
     }
 
     /** HAPUS Kost */
@@ -228,5 +241,20 @@ class KostController extends Controller
         $kost->delete();
 
         return back()->with('success', 'Kost berhasil dihapus!');
+    }
+    public function updateStock(Request $request, Kost $kost)
+    {
+        // Pastikan owner yang mengubah
+        if ($kost->owner_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'stok_kamar' => 'required|integer|min:0',
+        ]);
+
+        $kost->update(['stok_kamar' => $request->stok_kamar]);
+
+        return back()->with('success', 'Stok kamar berhasil diperbarui!');
     }
 }

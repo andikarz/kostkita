@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Midtrans\Notification;
+use Midtrans\Transaction;
 
 class PaymentController extends Controller
 {
@@ -107,6 +108,8 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Payment not found'], 404);
         }
 
+        $oldStatus = $payment->status; // Capture old status
+
         $payment->transaction_id = $notif->transaction_id;
         $payment->payment_type = $type;
 
@@ -132,9 +135,10 @@ class PaymentController extends Controller
 
         $payment->save();
 
-        // Update Booking Status
-        if ($payment->status === 'success') {
-            $payment->booking->update(['status' => 'paid']); // Assuming booking has 'paid' status or similar
+        // Update Booking Status & Stock
+        if ($payment->status === 'success' && $oldStatus !== 'success') {
+            $payment->booking->update(['status' => 'paid']);
+            $payment->booking->kost->decrement('stok_kamar'); // Kurangi stok
         } elseif (in_array($payment->status, ['failed', 'expired', 'cancelled'])) {
             $payment->booking->update(['status' => 'cancelled']);
         }
@@ -144,6 +148,69 @@ class PaymentController extends Controller
 
     public function finish(Request $request)
     {
+        $orderId = $request->query('order_id');
+
+        if ($orderId) {
+            try {
+                $status = Transaction::status($orderId);
+                $status = json_decode(json_encode($status), true); // Convert to array to be safe
+
+                $transaction = $status['transaction_status'];
+                $type = $status['payment_type'];
+                $fraud = $status['fraud_status'] ?? null;
+                $transaction_id = $status['transaction_id'] ?? null;
+
+                // Extract booking ID from order_id (format: BOOKING-{id}-{timestamp})
+                $parts = explode('-', $orderId);
+                $bookingId = $parts[1] ?? null;
+
+                if ($bookingId) {
+                    $payment = Payment::where('booking_id', $bookingId)->first();
+
+                    if ($payment) {
+                        $oldStatus = $payment->status; // Capture old status
+
+                        $payment->transaction_id = $transaction_id;
+                        $payment->payment_type = $type;
+
+                        if ($transaction == 'capture') {
+                            if ($type == 'credit_card') {
+                                if ($fraud == 'challenge') {
+                                    $payment->status = 'challenge';
+                                } else {
+                                    $payment->status = 'success';
+                                }
+                            }
+                        } else if ($transaction == 'settlement') {
+                            $payment->status = 'success';
+                        } else if ($transaction == 'pending') {
+                            $payment->status = 'pending';
+                        } else if ($transaction == 'deny') {
+                            $payment->status = 'failed';
+                        } else if ($transaction == 'expire') {
+                            $payment->status = 'expired';
+                        } else if ($transaction == 'cancel') {
+                            $payment->status = 'cancelled';
+                        }
+
+                        $payment->save();
+
+                        // Update Booking Status & Stock
+                        if ($payment->status === 'success' && $oldStatus !== 'success') {
+                            $payment->booking->update(['status' => 'paid']);
+                            $payment->booking->kost->decrement('stok_kamar'); // Kurangi stok
+                        } elseif (in_array($payment->status, ['failed', 'expired', 'cancelled'])) {
+                            $payment->booking->update(['status' => 'cancelled']);
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                // If checking status fails, silently continue as it might be network issue
+                // The webhook is the primary reliable source, this is just a proactive check for UX
+                \Illuminate\Support\Facades\Log::error('Midtrans Finish Status Check Error: ' . $e->getMessage());
+            }
+        }
+
         return redirect()->route('profile.riwayat')->with('success', 'Pembayaran sedang diproses.');
     }
 }

@@ -3,11 +3,12 @@
 @section('content')
   @php
     $hargaBulanan = $kost->harga_bulanan;
-    // aturan biaya layanan
-    $biayaLayanan = $hargaBulanan < 1000000 ? 15000 : 25000;
+    // aturan biaya layanan fixed 25.000 dan admin 20.000
+    $biayaLayanan = 25000;
+    $biayaAdmin = 20000;
     $lamaDefault = 1;
-    $subtotalAwal = $hargaBulanan * $lamaDefault; // Preview hanya subtotal
-    $totalAwal = $subtotalAwal + $biayaLayanan; // Total lengkap tabel bawah
+    $subtotalAwal = $hargaBulanan * $lamaDefault;
+    $totalAwal = $subtotalAwal + $biayaLayanan + $biayaAdmin;
   @endphp
 
   <div class="container">
@@ -42,7 +43,7 @@
               <option value="12" @selected(old('lama_sewa') == 12)>12 bulan</option>
             </select>
             @error('lama_sewa')
-               <div class="invalid-feedback">{{ $message }}</div>
+              <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
 
@@ -60,6 +61,7 @@
               <span id="labelHargaKamar">Harga kamar (1 bulan)</span>
               <span id="nilaiHargaKamar">Rp {{ number_format($subtotalAwal, 0, ',', '.') }}</span>
             </div>
+
             <div class="d-flex justify-content-between">
               <span>Biaya Layanan</span>
               <span id="biayaLayananSpan">Rp {{ number_format($biayaLayanan, 0, ',', '.') }}</span>

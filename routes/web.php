@@ -116,6 +116,9 @@ Route::middleware('auth')
         Route::post('/{kost}', [BookingController::class, 'store'])
             ->name('store');
 
+        Route::get('/{booking}/print', [BookingController::class, 'print'])
+            ->name('print');
+
         Route::get('/{booking}/payment', [BookingController::class, 'payment'])
             ->name('payment');
 
@@ -158,6 +161,7 @@ Route::post('/payment/notification', [App\Http\Controllers\PaymentController::cl
 
 Route::middleware('auth')->group(function () {
     Route::resource('kost', KostController::class)->except(['show']);
+    Route::patch('/kost/{kost}/stock', [KostController::class, 'updateStock'])->name('kost.updateStock');
 });
 
 

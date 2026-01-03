@@ -3,108 +3,121 @@
 @section('title', 'Dashboard Pemilik')
 
 @section('content')
-<div class="siko-wrapper">
-    {{-- MAIN --}}
-    <main class="siko-main">
-        
-        {{-- Info cards atas --}}
-        <div class="siko-cards-row">
-            <div class="siko-card bg-purple">
-                <div class="siko-card-title">Kamar Terisi</div>
-                <div class="siko-card-value">
-                    {{ $occupiedRooms ?? 2 }}
-                </div>
-                <div class="siko-card-sub">
-                    Jumlah Penghuni {{ $totalTenants ?? 2 }}
-                </div>
-                <div class="siko-card-icon">
-                    <i class="fas fa-bed"></i>
-                </div>
+    <div class="siko-wrapper">
+        {{-- MAIN --}}
+        <main class="siko-main">
+
+
+           
+        {{-- Tabel Kelola Stok Kost --}}
+        <div class="siko-panel mt-4">
+            <div class="siko-panel-header mb-3">
+                <div class="siko-panel-title">Kelola Stok Kost</div>
             </div>
-
-            <div class="siko-card bg-amber">
-                <div class="siko-card-title">Kamar Kosong</div>
-                <div class="siko-card-value">
-                    {{ $emptyRooms ?? 5 }}
-                </div>
-                <div class="siko-card-sub">
-                    dari {{ $totalRooms ?? 7 }} Kamar
-                </div>
-                <div class="siko-card-icon">
-                    <i class="fas fa-door-open"></i>
-                </div>
-            </div>
-        </div>
-
-        {{-- Grafik perbandingan kamar terisi vs kosong --}}
-        <div class="siko-panel">
-            <div class="siko-panel-header">
-                <div>
-                    <div class="siko-panel-title">
-                        Statistik Kamar {{ $year ?? 2022 }}
-                    </div>
-                    <div class="siko-panel-sub">
-                        Perbandingan Kamar Terisi dan Kosong Tahun Ini
-                        dengan Tahun Lalu
-                    </div>
-                </div>
-                <div class="siko-legend">
-                    <span class="leg-income">Kamar Terisi</span>
-                    <span class="leg-expense">Kamar Kosong</span>
-                </div>
-            </div>
-
-            {{-- ganti id canvas kalau perlu, sesuaikan juga di script JS --}}
-            <canvas id="roomChart" height="100"></canvas>
-
-            <div class="text-center mt-2" style="font-size: 11px; color:#6b7280;">
-                Data tahunan kamar terisi vs kamar kosong dibandingkan dengan tahun lalu
-            </div>
-
-            {{-- Strip ringkasan --}}
-            <div class="siko-strip mt-3">
-                <div class="siko-strip-item bg-soft-blue">
-                    <div class="siko-strip-label">Kamar Terisi Tahun Ini</div>
-                    <div class="siko-strip-value">
-                        {{ $occupiedThisYear ?? 0 }}
-                    </div>
-                    <div class="siko-strip-extra">
-                        {{ $occupiedThisYearPercentage ?? '0%' }}
-                    </div>
-                </div>
-
-                <div class="siko-strip-item bg-soft-yellow">
-                    <div class="siko-strip-label">Kamar Kosong Tahun Ini</div>
-                    <div class="siko-strip-value">
-                        {{ $emptyThisYear ?? 0 }}
-                    </div>
-                    <div class="siko-strip-extra">
-                        {{ $emptyThisYearPercentage ?? '0%' }}
-                    </div>
-                </div>
-
-                <div class="siko-strip-item bg-soft-green">
-                    <div class="siko-strip-label">Kamar Terisi Tahun Lalu</div>
-                    <div class="siko-strip-value">
-                        {{ $occupiedLastYear ?? 0 }}
-                    </div>
-                    <div class="siko-strip-extra">
-                        {{ $occupiedLastYearPercentage ?? '0%' }}
-                    </div>
-                </div>
-
-                <div class="siko-strip-item bg-soft-red">
-                    <div class="siko-strip-label">Kamar Kosong Tahun Lalu</div>
-                    <div class="siko-strip-value">
-                        {{ $emptyLastYear ?? 0 }}
-                    </div>
-                    <div class="siko-strip-extra">
-                        {{ $emptyLastYearPercentage ?? '0%' }}
-                    </div>
-                </div>
+            <div class="table-responsive">
+                <table class="table align-middle table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nama Kost</th>
+                            <th>Lokasi</th>
+                            <th>Harga</th>
+                            <th style="width: 250px;">Stok Kamar</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($kosts as $kost)
+                            <tr>
+                                <td class="fw-bold">{{ $kost->nama }}</td>
+                                <td>{{ $kost->kota }}</td>
+                                <td>Rp{{ number_format($kost->harga_bulanan, 0, ',', '.') }}</td>
+                                <td>
+                                    <form action="{{ route('kost.updateStock', $kost->id) }}" method="POST"
+                                        class="d-flex gap-2">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="number" name="stok_kamar" class="form-control"
+                                            value="{{ $kost->stok_kamar }}" min="0" required style="width: 80px;">
+                                        <button type="submit" class="btn btn-primary btn-sm px-3">
+                                            Update
+                                        </button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a href="{{ route('kost.edit', $kost->id) }}" class="btn btn-sm btn-warning" title="Edit Kost">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">
+                                    Belum ada kost. Silakan tambah kost terlebih dahulu.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
-    </main>
-</div>
+
+            {{-- Tabel Daftar Pesanan --}}
+            <div class="siko-panel mt-4">
+                <div class="siko-panel-header mb-3">
+                    <div class="siko-panel-title">Daftar Pesanan Masuk</div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Penyewa</th>
+                                <th>Kost</th>
+                                <th>Tgl Booking</th>
+                                <th>Durasi</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($ownerBookings as $booking)
+                                <tr>
+                                    <td class="fw-bold">#{{ $booking->id }}</td>
+                                    <td>
+                                        <div class="fw-bold">{{ $booking->user->name }}</div>
+                                        <div class="text-muted small">{{ $booking->user->email }}</div>
+                                    </td>
+                                    <td>{{ $booking->kost->nama }}</td>
+                                    <td>{{ $booking->created_at->format('d/m/Y') }}</td>
+                                    <td>{{ $booking->lama_sewa }} Bulan</td>
+                                    <td>Rp{{ number_format($booking->total, 0, ',', '.') }}</td>
+                                    <td>
+                                        @php
+                                            $status = $booking->payment->status ?? 'pending';
+                                            $badgeClass = match ($status) {
+                                                'success', 'paid' => 'bg-success',
+                                                'pending' => 'bg-warning text-dark',
+                                                'failed', 'cancelled', 'expired' => 'bg-danger',
+                                                default => 'bg-secondary'
+                                            };
+                                        @endphp
+                                        <span class="badge {{ $badgeClass }}">
+                                            {{ ucfirst($status) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center py-4 text-muted">
+                                        Belum ada pesanan masuk.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
 
 @endsection

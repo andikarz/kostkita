@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>@yield('title', 'Dashboard Pemilik')</title>
+    <link rel="icon" href="{{ asset('img/favicon.ico') }}">
 
     {{-- Google Fonts --}}
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -64,11 +65,6 @@
                 <a href="{{ route('profile.create') }}"
                     class="sidebar-link {{ request()->routeIs('profile.create') ? 'active' : '' }}">
                     <span>Tambah Kost </span>
-                </a>
-
-                <a href="{{ route('profile.edit') }}"
-                    class="sidebar-link {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
-                    <span>Edit Kost </span>
                 </a>
             @endif
 

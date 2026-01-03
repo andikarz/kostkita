@@ -12,19 +12,26 @@ class BookingController extends Controller
 {
     public function create(Kost $kost)
     {
+        if ($kost->stok_kamar <= 0) {
+            return back()->with('error', 'Maaf, stok kamar untuk kost ini sudah habis.');
+        }
+
         return view('booking.create', compact('kost'));
     }
 
     public function store(Request $request, Kost $kost)
     {
+        if ($kost->stok_kamar <= 0) {
+            return back()->with('error', 'Maaf, stok kamar untuk kost ini sudah habis.');
+        }
+
         $request->validate([
-            'tanggal_mulai' => 'required|date',
+            'tanggal_mulai' => 'required|date|after_or_equal:today',
             'lama_sewa' => 'required|integer|min:1'
         ]);
 
-        $pajak = 20000;
         $biaya_layanan = 25000;
-        $total = ($kost->harga_bulanan * $request->lama_sewa) + $pajak + $biaya_layanan;
+        $total = ($kost->harga_bulanan * $request->lama_sewa) + $biaya_layanan;
 
         $booking = Booking::create([
             'user_id' => Auth::id(),
@@ -32,7 +39,7 @@ class BookingController extends Controller
             'tanggal_mulai' => $request->tanggal_mulai,
             'lama_sewa' => $request->lama_sewa,
             'harga_per_bulan' => $kost->harga_bulanan,
-            'pajak' => $pajak,
+            'pajak' => 0,
             'biaya_layanan' => $biaya_layanan,
             'total' => $total,
             'status' => 'menunggu_pembayaran',
@@ -41,6 +48,17 @@ class BookingController extends Controller
         return redirect()
             ->route('payment.checkout', $booking)
             ->with('success', 'Booking berhasil dibuat, silakan lakukan pembayaran.');
+    }
+
+    public function print(Booking $booking)
+    {
+        $this->authorizeBooking($booking);
+
+        if ($booking->status !== 'paid') {
+            abort(403, 'Hanya booking yang sudah dibayar yang dapat dicetak.');
+        }
+
+        return view('booking.print', compact('booking'));
     }
 
     public function payment(Booking $booking)

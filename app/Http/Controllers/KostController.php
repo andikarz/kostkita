@@ -7,6 +7,8 @@ use App\Models\KostPhoto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Intervention\Image\Laravel\Facades\Image;
 
 class KostController extends Controller
 {
@@ -104,7 +106,18 @@ class KostController extends Controller
 
         // cover
         if ($request->hasFile('cover')) {
-            $data['cover'] = $request->file('cover')->store('covers', 'public');
+            $file = $request->file('cover');
+            $filename = 'covers/' . Str::random(40) . '.jpg';
+
+            $image = Image::read($file);
+            $image->scale(width: 1200); // Resize max width 1200px (aspect ratio preserved)
+
+            // Encode to current extension (or convert to webp) with 80% quality
+            $encoded = $image->toJpeg(quality: 80);
+
+            Storage::disk('public')->put($filename, (string) $encoded);
+
+            $data['cover'] = $filename;
         }
 
         // kota default
@@ -125,10 +138,17 @@ class KostController extends Controller
         // simpan foto tambahan
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $file) {
-                $path = $file->store('photos', 'public');
+                $filename = 'photos/' . Str::random(40) . '.jpg';
+
+                $image = Image::read($file);
+                $image->scale(width: 1200);
+                $encoded = $image->toJpeg(quality: 80);
+
+                Storage::disk('public')->put($filename, (string) $encoded);
+
                 KostPhoto::create([
                     'kost_id' => $kost->id,
-                    'path' => $path,
+                    'path' => $filename,
                 ]);
             }
         }
@@ -173,7 +193,17 @@ class KostController extends Controller
             if ($kost->cover) {
                 Storage::disk('public')->delete($kost->cover);
             }
-            $data['cover'] = $request->file('cover')->store('covers', 'public');
+
+            $file = $request->file('cover');
+            $filename = 'covers/' . Str::random(40) . '.jpg';
+
+            $image = Image::read($file);
+            $image->scale(width: 1200);
+            $encoded = $image->toJpeg(quality: 80);
+
+            Storage::disk('public')->put($filename, (string) $encoded);
+
+            $data['cover'] = $filename;
         } else {
             unset($data['cover']);
         }
@@ -195,10 +225,17 @@ class KostController extends Controller
         // tambah foto-foto baru (kalau ada)
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $file) {
-                $path = $file->store('photos', 'public');
+                $filename = 'photos/' . Str::random(40) . '.jpg';
+
+                $image = Image::read($file);
+                $image->scale(width: 1200);
+                $encoded = $image->toJpeg(quality: 80);
+
+                Storage::disk('public')->put($filename, (string) $encoded);
+
                 KostPhoto::create([
                     'kost_id' => $kost->id,
-                    'path' => $path,
+                    'path' => $filename,
                 ]);
             }
         }

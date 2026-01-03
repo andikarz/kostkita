@@ -23,13 +23,14 @@ class Kost extends Model
         'fasilitas_umum',
         'cover',
         'is_recommended',
+        'status',
     ];
 
     protected $casts = [
-    'is_recommended'   => 'boolean',
-    'fasilitas'        => 'array',
-    'fasilitas_kmandi' => 'array',
-    'fasilitas_umum'   => 'array',
+        'is_recommended' => 'boolean',
+        'fasilitas' => 'array',
+        'fasilitas_kmandi' => 'array',
+        'fasilitas_umum' => 'array',
     ];
 
     public function owner()

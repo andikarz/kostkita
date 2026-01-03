@@ -12,6 +12,9 @@ class BookingController extends Controller
 {
     public function create(Kost $kost)
     {
+        if (($kost->status ?? 'unverified') !== 'verified') {
+            return back()->with('error', 'Kost belum diverifikasi dan tidak dapat dipesan.');
+        }
         if ($kost->stok_kamar <= 0) {
             return back()->with('error', 'Maaf, stok kamar untuk kost ini sudah habis.');
         }
@@ -21,6 +24,9 @@ class BookingController extends Controller
 
     public function store(Request $request, Kost $kost)
     {
+        if (($kost->status ?? 'unverified') !== 'verified') {
+            return back()->with('error', 'Kost belum diverifikasi dan tidak dapat dipesan.');
+        }
         if ($kost->stok_kamar <= 0) {
             return back()->with('error', 'Maaf, stok kamar untuk kost ini sudah habis.');
         }

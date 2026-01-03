@@ -317,9 +317,23 @@
                 class="btn btn-outline-success" target="_blank">Hubungi Pemilik</a>
 
               @auth
-                <a href="{{ route('booking.create', $kost->id) }}" class="btn btn-primary">Sewa</a>
+                @if(($kost->status ?? 'unverified') === 'verified')
+                    <a href="{{ route('booking.create', $kost->id) }}" class="btn btn-primary">Sewa</a>
+                @else
+                    <button class="btn btn-secondary" disabled>Kost Belum Terverifikasi</button>
+                    <small class="text-danger d-block mt-2">
+                        Kost ini belum diverifikasi oleh admin, sehingga belum bisa dipesan.
+                    </small>
+                @endif
               @else
-                <a href="{{ route('login') }}" class="btn btn-primary">Masuk untuk sewa</a>
+                @if(($kost->status ?? 'unverified') === 'verified')
+                    <a href="{{ route('login') }}" class="btn btn-primary">Masuk untuk sewa</a>
+                @else
+                     <button class="btn btn-secondary" disabled>Kost Belum Terverifikasi</button>
+                     <small class="text-danger d-block mt-2">
+                        Kost ini belum diverifikasi oleh admin, sehingga belum bisa dipesan.
+                    </small>
+                @endif
               @endauth
             </div>
           </div>

@@ -308,7 +308,7 @@
       <div class="col-md-4">
         <div class="card shadow-sm">
           <div class="card-body">
-            <h4>Rp{{ number_format($kost->harga_bulanan) }} <small class="text-muted">/bulan</small></h4>
+            <h4>Rp{{ number_format($kost->harga_bulanan,0,',','.') }} <small class="text-muted">/bulan</small></h4>
             <p class="mb-1">Sisa kamar: {{ $kost->stok_kamar }}</p>
             <p class="mb-3">Pemilik: {{ $kost->owner?->name }}</p>
 

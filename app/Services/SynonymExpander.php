@@ -10,11 +10,19 @@ class SynonymExpander
     protected array $synonyms = [
 
         // kamar mandi
-        'wc' => ['kamar mandi'],
-        'toilet' => ['kamar mandi'],
-        'km' => ['kamar mandi'],
-        'km dalam' => ['kamar mandi dalam'],
-        'wc dalam' => ['kamar mandi dalam'],
+        'wc' => ['k. mandi'],
+        'toilet' => ['k. mandi'],
+        'km' => ['k. mandi'],
+        'km dalam' => ['k. mandi dalam'],
+        'wc dalam' => ['k. mandi dalam'],
+        'km luar' => ['k. mandi luar'],
+        'wc luar' => ['k. mandi luar'],
+        'kamar mandi luar' => ['k. mandi luar'],
+        'kamar mandi dalam' => ['k. mandi dalam'],
+        'wc duduk' => ['kloset duduk'],
+        'wc jongkok' => ['kloset jongkok'],
+        'toilet duduk' => ['kloset duduk'],
+        'toilet jongkok' => ['kloset jongkok'],
 
         // jenis
         'cewek' => ['putri'],
@@ -29,6 +37,9 @@ class SynonymExpander
         'kipas' => ['kipas angin'],
         'parkir motor' => ['parkiran'],
         'parkir mobil' => ['parkiran'],
+        'luas' => ['ruang tamu'],
+        'dapur' => ['dapur bersama'],
+
 
         // kebijakan
         'bebas' => ['jam malam bebas'],

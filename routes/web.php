@@ -75,6 +75,10 @@ Route::middleware('auth:admin')
         // Hapus foto tambahan kost
         Route::delete('/kost/photo/{photo}', [KostController::class, 'destroyPhoto'])
             ->name('kost.photo.destroy');
+
+        // Verifikasi Kost
+        Route::post('/kost/{kost}/verify', [KostController::class, 'verify'])
+            ->name('kost.verify');
     });
 
 

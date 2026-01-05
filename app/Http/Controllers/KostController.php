@@ -294,4 +294,10 @@ class KostController extends Controller
 
         return back()->with('success', 'Stok kamar berhasil diperbarui!');
     }
+
+    public function verify(Kost $kost)
+    {
+        $kost->update(['status' => 'verified']);
+        return back()->with('success', 'Kost berhasil diverifikasi!');
+    }
 }
